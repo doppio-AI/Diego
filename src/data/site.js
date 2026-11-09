@@ -112,6 +112,13 @@ export const PRICES = [
 export const PRICES_NOTE =
   "Los rangos son referencias para comenzar a cotizar, no tarifas oficiales. El costo final depende de funcionalidades, diseño, contenido, integraciones, tiempos y mantenimiento. Dominio, hosting, correo, pasarelas de pago y licencias se cotizan aparte cuando correspondan.";
 
+/**
+ * Ruta de los recursos dentro de `public/`, relativa a la base del build.
+ * Con `base: "./"` funciona igual en la raíz de un dominio que en una
+ * subruta de GitHub Pages (`/Diego/`).
+ */
+const media = (archivo) => `${import.meta.env.BASE_URL}proyectos/${archivo}`;
+
 /** §9 — Proyectos reales entregados */
 export const PROJECTS = [
   {
@@ -119,7 +126,7 @@ export const PROJECTS = [
     nombre: "Sitio Web Dra. Claudia Magally Ramírez García",
     tipo: "Proyecto profesional",
     mockup: "medical",
-    imagen: "/proyectos/dra-claudia-ramirez.jpg",
+    imagen: media("dra-claudia-ramirez.jpg"),
     imagenAlt:
       "Captura de la portada del sitio de la Dra. Claudia Magally Ramírez García: titular «Tu salud es una prioridad» y credenciales médicas",
     categoria: "Página web médica",
@@ -154,7 +161,7 @@ export const PROJECTS = [
     nombre: "Hera Lighting — E-commerce & Storefront Optimizado",
     tipo: "Proyecto de ingeniería web",
     mockup: "ecommerce",
-    imagen: "/proyectos/hera-lighting.jpg",
+    imagen: media("hera-lighting.jpg"),
     imagenAlt:
       "Captura de la portada de Hera Lighting: titular «Tu evento suena, se ilumina y se monta con HERA» y accesos a catálogo y cotización",
     categoria: "E-commerce / Monorepo",
@@ -189,7 +196,7 @@ export const PROJECTS = [
     nombre: "Jorima — Plataforma de bienestar laboral con IA",
     tipo: "Proyecto full-stack",
     mockup: "ecommerce",
-    imagen: "/proyectos/jorima.jpg",
+    imagen: media("jorima.jpg"),
     imagenAlt:
       "Captura de Jorima: landing web con el asistente de bienestar y, a la derecha, la app móvil con la sección de Recursos",
     categoria: "SaaS + App móvil",
