@@ -1,0 +1,305 @@
+@import "tailwindcss";
+
+/* =========================================================================
+   Sistema de diseño e identidad visual
+   Base: especificación de identidad + Plan_portafolio_Diego_Reyes.docx (§6)
+
+   Equivalencia con los nombres de la especificación (§8):
+     #101827 → --ink          (#101827 exacto)
+     #18263A → --surface
+     #3B82F6 → --electric
+     #67C7FF → --acento / --glow
+     #F5F8FC → --fg
+     #AAB8CB → --muted
+     #314158 → --line
+     14px    → --radius-card
+
+   Tema CLARO por defecto; el oscuro (la identidad azul de la especificación)
+   se activa con [data-theme="dark"]. La paleta vive en variables CSS y
+   @theme las expone como utilidades, así que ningún componente fija colores.
+   ========================================================================= */
+
+:root {
+  color-scheme: light;
+
+  /* Superficies */
+  --ink: #f4f7fc; /* Fondo general */
+  --ink-deep: #e9eff8; /* Pie de página / capas hundidas */
+  --surface: #ffffff; /* Tarjetas y paneles */
+  --surface-2: #eef3fb; /* Paneles elevados / hover */
+  --line: #d6e0ee; /* Bordes sutiles */
+
+  /* Texto */
+  --fg: #0f1a2b; /* Títulos y contenido */
+  --muted: #54627a; /* Texto secundario */
+
+  /* Acentos */
+  --electric: #2563eb; /* Azul principal (rellenos) */
+  --electric-bright: #1d4ed8; /* Azul para texto sobre claro */
+  --acento: #0e7490; /* Cian de acento legible sobre claro */
+  --acento-ink: #ffffff; /* Texto sobre relleno cian */
+  --glow: #0284c7; /* Azul luminoso: en claro se oscurece para ser visible */
+  --violeta: #6d28d9; /* Reservado a la sintaxis del bloque de código */
+  --danger: #dc2626;
+  --danger-text: #b91c1c;
+
+  /* Detalles del tema */
+  --focus: #2563eb;
+  --grid-line: rgb(15 26 43 / 0.055);
+  --scrim: rgb(15 26 43 / 0.42);
+  --glow-a: rgb(37 99 235 / 0.14);
+  --glow-b: rgb(103 199 255 / 0.18);
+
+  /* Movimiento (§4 y §8) */
+  --motion-fast: 160ms;
+  --motion-medium: 350ms;
+  --motion-slow: 600ms;
+  --ease-ui: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --radius-card: 14px;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Paleta de la especificación */
+  --ink: #101827;
+  --ink-deep: #0c1322;
+  --surface: #18263a;
+  --surface-2: #1e3049;
+  --line: #314158;
+
+  --fg: #f5f8fc;
+  --muted: #aab8cb;
+
+  --electric: #3b82f6;
+  --electric-bright: #67c7ff;
+  --acento: #67c7ff;
+  --acento-ink: #0c1322;
+  --glow: #67c7ff;
+  --violeta: #8b5cf6;
+  --danger: #f87171;
+  --danger-text: #fca5a5;
+
+  --focus: #67c7ff;
+  --grid-line: rgb(255 255 255 / 0.045);
+  --scrim: rgb(8 12 20 / 0.82);
+  --glow-a: rgb(59 130 246 / 0.14);
+  --glow-b: rgb(103 199 255 / 0.12);
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-ink-deep: var(--ink-deep);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+
+  --color-electric: var(--electric);
+  --color-electric-bright: var(--electric-bright);
+  --color-acento: var(--acento);
+  --color-acento-ink: var(--acento-ink);
+  --color-glow: var(--glow);
+  --color-violeta: var(--violeta);
+  --color-danger: var(--danger);
+  --color-danger-text: var(--danger-text);
+  --color-scrim: var(--scrim);
+
+  /* Tipografías */
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Radios y curvas */
+  --radius-card: 14px;
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    /* Sin fondo propio: lo pinta la raíz de React, que sí se remonta al
+       cambiar de tema (si no, quedaría con el color anterior). El color
+       inicial lo fija el script de index.html antes del primer pintado. */
+    background-color: transparent;
+  }
+
+  body {
+    background-color: transparent;
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    transition:
+      background-color 200ms var(--ease-ui),
+      color 200ms var(--ease-ui);
+  }
+
+  /* Títulos: peso alto y tamaño fluido (§2) */
+  h1,
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Foco visible para navegación por teclado (§9) */
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  /* El encabezado fijo no debe tapar los títulos al saltar por anclas */
+  [id] {
+    scroll-margin-top: 6rem;
+  }
+
+  /* Al navegar por anclas el foco se mueve al destino (para que el tabulador
+     siga desde ahí). Ese destino no es un control: no dibuja anillo. */
+  section[tabindex="-1"]:focus {
+    outline: none;
+  }
+
+  ::selection {
+    background-color: var(--electric);
+    color: #fff;
+  }
+
+  /* Movimiento reducido: CSS (§9) */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* Contenedor de contenido: ancho máximo ~1,200 px */
+@utility container-page {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+
+  @media (width >= 48rem) {
+    padding-inline: 2rem;
+  }
+
+  @media (width >= 80rem) {
+    padding-inline: 2.5rem;
+  }
+}
+
+/* Retícula sutil de fondo */
+@utility grid-lines {
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+@utility text-gradient {
+  background-image: linear-gradient(
+    100deg,
+    var(--electric) 0%,
+    var(--acento) 62%,
+    var(--electric-bright) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Borde con degradado para tarjetas destacadas */
+@utility ring-gradient {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    linear-gradient(
+        140deg,
+        color-mix(in oklab, var(--electric) 55%, transparent),
+        color-mix(in oklab, var(--acento) 45%, transparent) 50%,
+        color-mix(in oklab, var(--glow) 35%, transparent)
+      )
+      border-box;
+}
+
+/* =========================================================================
+   Detalles ambientales (§5.G): solo decorativos, bajo contraste, movimiento
+   lento y basado en transform para no castigar la CPU.
+   ========================================================================= */
+
+@keyframes flotar-suave {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -14px, 0);
+  }
+}
+
+@keyframes girar-lento {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes recorrer-linea {
+  0% {
+    transform: translate3d(-110%, 0, 0);
+  }
+  100% {
+    transform: translate3d(110%, 0, 0);
+  }
+}
+
+@utility ambient-float {
+  animation: flotar-suave 16s var(--ease-ui) infinite alternate;
+}
+
+@utility ambient-spin {
+  animation: girar-lento 48s linear infinite;
+}
+
+@utility ambient-sweep {
+  animation: recorrer-linea 11s linear infinite;
+}
+
+/* Línea fina luminosa reutilizable */
+@utility hairline-glow {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--glow),
+    color-mix(in oklab, var(--glow) 40%, transparent),
+    transparent
+  );
+}

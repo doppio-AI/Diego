@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f5f7fb" />
+
+    <!-- Tema claro por defecto; evita el destello al cargar si el visitante
+         eligió el oscuro en una visita anterior. -->
+    <script>
+      (function () {
+        try {
+          var guardado = window.localStorage.getItem("dr-tema");
+          var oscuro = guardado === "oscuro";
+          document.documentElement.dataset.theme = oscuro ? "dark" : "light";
+          document.documentElement.style.backgroundColor = oscuro
+            ? "#101827"
+            : "#f4f7fc";
+        } catch (error) {
+          document.documentElement.dataset.theme = "light";
+        }
+      })();
+    </script>
+
+    <title>Diego Reyes · Desarrollo Web y Software</title>
+    <meta
+      name="description"
+      content="Desarrollo páginas web y sistemas a medida para negocios y profesionales que quieren mejorar su presencia digital y trabajar de manera más eficiente."
+    />
+    <meta name="author" content="Diego Reyes" />
+    <link rel="canonical" href="https://diegoreyes.dev/" />
+
+    <!-- Vista previa para redes sociales -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_MX" />
+    <meta property="og:site_name" content="Diego Reyes" />
+    <meta property="og:title" content="Diego Reyes · Desarrollo Web y Software" />
+    <meta
+      property="og:description"
+      content="Páginas web y sistemas a medida. Tu idea, en un sitio web funcional."
+    />
+    <meta property="og:url" content="https://diegoreyes.dev/" />
+    <meta property="og:image" content="./og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Diego Reyes — Desarrollo Web y Software"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Diego Reyes · Desarrollo Web y Software" />
+    <meta
+      name="twitter:description"
+      content="Páginas web y sistemas a medida. Tu idea, en un sitio web funcional."
+    />
+    <meta name="twitter:image" content="./og-image.png" />
+
+    <link rel="icon" type="image/svg+xml" href="./isotipo.svg" />
+
+    <!-- Imagen del hero: suele ser el LCP, conviene que empiece a descargarse ya -->
+    <link rel="preload" as="image" href="./heroimg.jpg" fetchpriority="high" />
+
+    <!-- Tipografías: Inter (lectura), Space Grotesk (títulos), JetBrains Mono (código) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Diego Reyes",
+        "jobTitle": "Desarrollador de software",
+        "description": "Desarrollo web y software: páginas web, catálogos digitales y sistemas a medida.",
+        "url": "https://diegoreyes.dev/",
+        "knowsAbout": [
+          "Desarrollo web",
+          "React",
+          "JavaScript",
+          "Sistemas a medida",
+          "Bases de datos"
+        ],
+        "sameAs": []
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
