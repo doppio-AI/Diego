@@ -20,7 +20,7 @@ ese archivo cuando cambien proyectos, precios o servicios.
 
 `worker/wrangler.toml` contiene `ALLOWED_ORIGIN`; cambia ese valor si tu sitio
 se sirve desde un dominio propio distinto de `https://doppio-ai.github.io`.
-El Worker usa Gemini 2.5 Flash y se puede cambiar en `GEMINI_MODEL`.
+El Worker usa Gemini 3.5 Flash-Lite y se puede cambiar en `GEMINI_MODEL`.
 
 Para desarrollo local usa `npx wrangler dev --config worker/wrangler.toml`
 con un secreto local `.dev.vars` dentro de `worker/` (ignorado por Git), y
@@ -30,7 +30,9 @@ el frontend, pero no prueba una conversación real con Gemini.
 El botón de cotización utiliza `CONTACT.whatsapp` en `src/data/site.js`.
 Mientras siga con el número de ejemplo, enlaza a la sección `#contacto`.
 
-**Antes de abrirlo al público:** configura limitación de solicitudes y protección
+El Worker configura un límite gestionado de 10 solicitudes por minuto por IP (aproximado y por ubicación de Cloudflare; no es un límite global de gasto). Valida hasta 16 KB reales de entrada y usa un timeout de 25 segundos para Gemini.
+
+**Antes de abrirlo al público:** verifica cuotas de Gemini y evalúa protección
 contra bots en el Worker/Cloudflare, alerta/presupuesto de consumo de Gemini y verifica
 la información comercial. La conversación no se guarda en una base de datos;
 el usuario puede compartir voluntariamente su consulta por WhatsApp.
