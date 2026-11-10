@@ -4,6 +4,8 @@ import "./ChatWidget.css";
 
 const INTRO = "¡Hola! Soy el asistente virtual de Diego. Puedo contarte sobre sus proyectos, tecnologías y servicios. ¿Qué te gustaría saber?";
 const SUGGESTIONS = ["¿Qué proyectos has realizado?", "¿Qué tecnologías manejas?", "¿Cuánto cuesta una web?"];
+// Se configura con la URL pública del Worker al construir GitHub Pages.
+const CHAT_API_URL = import.meta.env.VITE_CHAT_API_URL;
 
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
@@ -26,7 +28,8 @@ export function ChatWidget() {
     setError("");
     setLoading(true);
     try {
-      const response = await fetch("/api/chat", {
+      if (!CHAT_API_URL) throw new Error("Falta configurar el servicio");
+      const response = await fetch(CHAT_API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: next.slice(-12) })

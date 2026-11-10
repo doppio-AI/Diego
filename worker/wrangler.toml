@@ -1,0 +1,7 @@
+name = "diego-portfolio-chat"
+main = "index.js"
+compatibility_date = "2026-10-01"
+
+[vars]
+ALLOWED_ORIGIN = "https://doppio-ai.github.io"
+GEMINI_MODEL = "gemini-2.5-flash"

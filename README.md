@@ -2,22 +2,36 @@
 
 ## Asistente virtual (MVP)
 
-El widget flotante de `src/components/ChatWidget.jsx` consulta la función `api/chat.js`.
+El widget flotante de `src/components/ChatWidget.jsx` consulta un Cloudflare Worker
+(`worker/index.js`) que llama a Google Gemini. GitHub Pages solo sirve archivos
+estáticos, por lo que el Worker mantiene la clave privada fuera del navegador.
 Los datos públicos que puede usar están en `knowledge/portfolio.json`; actualiza
 ese archivo cuando cambien proyectos, precios o servicios.
 
-Para habilitar respuestas de IA, configura `OPENAI_API_KEY` en las variables de
-entorno del proyecto en Vercel. `OPENAI_CHAT_MODEL` es opcional y toma
-`gpt-5-mini` por defecto. No añadas claves al repositorio ni uses `VITE_`.
+1. Revoca cualquier clave expuesta y crea una nueva en Google AI Studio.
+2. En Cloudflare, instala Wrangler, inicia sesión y despliega el Worker:
+   `npx wrangler deploy --config worker/wrangler.toml`.
+3. En el panel de Cloudflare Workers, agrega `GEMINI_API_KEY` como **secreto**.
+   No lo introduzcas en código, `wrangler.toml` ni variables `VITE_`.
+4. Copia la URL pública del Worker (`https://...workers.dev`). En GitHub,
+   Settings → Secrets and variables → Actions → Variables, crea
+   `VITE_CHAT_API_URL` con esa URL; la URL es pública, no la clave.
+5. Ejecuta de nuevo el workflow de GitHub Pages para incluir la URL en el build.
 
-Para probar la función con el frontend usa `npx vercel dev`; el servidor
-habitual de Vite no expone `/api/chat`. `npm run build` solo verifica el frontend.
+`worker/wrangler.toml` contiene `ALLOWED_ORIGIN`; cambia ese valor si tu sitio
+se sirve desde un dominio propio distinto de `https://doppio-ai.github.io`.
+El Worker usa Gemini 2.5 Flash y se puede cambiar en `GEMINI_MODEL`.
+
+Para desarrollo local usa `npx wrangler dev --config worker/wrangler.toml`
+con un secreto local `.dev.vars` dentro de `worker/` (ignorado por Git), y
+configura el origen permitido acorde al entorno. `npm run build` verifica
+el frontend, pero no prueba una conversación real con Gemini.
 
 El botón de cotización utiliza `CONTACT.whatsapp` en `src/data/site.js`.
 Mientras siga con el número de ejemplo, enlaza a la sección `#contacto`.
 
-**Antes de abrirlo al público:** configura límite de solicitudes y protección
-contra bots en el hosting, alerta/presupuesto de consumo de la API y verifica
+**Antes de abrirlo al público:** configura limitación de solicitudes y protección
+contra bots en el Worker/Cloudflare, alerta/presupuesto de consumo de Gemini y verifica
 la información comercial. La conversación no se guarda en una base de datos;
 el usuario puede compartir voluntariamente su consulta por WhatsApp.
 
