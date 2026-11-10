@@ -1,0 +1,18 @@
+{
+  "nombre": "Diego Reyes",
+  "ubicacion": "Querétaro, México",
+  "especialidad": "Desarrollo web y software a medida",
+  "servicios": [
+    { "nombre": "Páginas web", "referencia": "Desde $2,500 MXN" },
+    { "nombre": "Catálogos digitales y comercio electrónico", "referencia": "Desde $1,200 MXN" },
+    { "nombre": "Sistemas personalizados", "referencia": "Desde $8,000 MXN" },
+    { "nombre": "Mantenimiento", "referencia": "$500–$1,200 MXN/mes" }
+  ],
+  "precios": "Son orientativos y dependen del alcance. Dominio, hosting, licencias e integraciones pueden cotizarse aparte.",
+  "proyectos": [
+    { "nombre": "Sitio web Dra. Claudia Magally Ramírez García", "tipo": "Página web médica", "tecnologias": ["React", "Vite", "TypeScript", "Tailwind CSS"] },
+    { "nombre": "Hera Lighting", "tipo": "E-commerce de productos para eventos", "tecnologias": ["Next.js", "React", "TypeScript", "Medusa JS", "PostgreSQL", "Supabase"], "demo": "https://heralighting.vercel.app" },
+    { "nombre": "Jorima", "tipo": "Plataforma de bienestar laboral con IA y aplicación móvil", "tecnologias": ["Next.js", "React", "TypeScript", "PostgreSQL", "Supabase", "Google Gemini", "React Native"], "demo": "https://jorima-eight.vercel.app" }
+  ],
+  "contacto": "El visitante puede utilizar el botón de WhatsApp del sitio o su sección de contacto. Nunca prometas disponibilidad ni fechas de entrega."
+}

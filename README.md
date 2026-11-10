@@ -1,5 +1,27 @@
 # Portafolio web — Diego Reyes
 
+## Asistente virtual (MVP)
+
+El widget flotante de `src/components/ChatWidget.jsx` consulta la función `api/chat.js`.
+Los datos públicos que puede usar están en `knowledge/portfolio.json`; actualiza
+ese archivo cuando cambien proyectos, precios o servicios.
+
+Para habilitar respuestas de IA, configura `OPENAI_API_KEY` en las variables de
+entorno del proyecto en Vercel. `OPENAI_CHAT_MODEL` es opcional y toma
+`gpt-5-mini` por defecto. No añadas claves al repositorio ni uses `VITE_`.
+
+Para probar la función con el frontend usa `npx vercel dev`; el servidor
+habitual de Vite no expone `/api/chat`. `npm run build` solo verifica el frontend.
+
+El botón de cotización utiliza `CONTACT.whatsapp` en `src/data/site.js`.
+Mientras siga con el número de ejemplo, enlaza a la sección `#contacto`.
+
+**Antes de abrirlo al público:** configura límite de solicitudes y protección
+contra bots en el hosting, alerta/presupuesto de consumo de la API y verifica
+la información comercial. La conversación no se guarda en una base de datos;
+el usuario puede compartir voluntariamente su consulta por WhatsApp.
+
+
 MVP del portafolio descrito en `Plan_portafolio_Diego_Reyes.docx`: una sola página
 que presenta servicios, precios orientativos, tres proyectos reales con captura del
 sitio publicado y un contacto claro.
