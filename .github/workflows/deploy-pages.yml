@@ -31,7 +31,7 @@ jobs:
 
       - name: Compilar el sitio
         env:
-          VITE_CHAT_API_URL: ${{ vars.VITE_CHAT_API_URL }}
+          VITE_CHAT_API_URL: ${{ vars.VITE_CHAT_API_URL || 'https://twilight-cell-8950.diego-reyes-reb.workers.dev/' }}
         run: npm run build
 
       - name: Configurar Pages
