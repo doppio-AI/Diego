@@ -1,5 +1,43 @@
 # Portafolio web — Diego Reyes
 
+## Asistente virtual (MVP)
+
+El widget flotante de `src/components/ChatWidget.jsx` consulta un Cloudflare Worker
+(`worker/index.js`) que llama a Google Gemini. GitHub Pages solo sirve archivos
+estáticos, por lo que el Worker mantiene la clave privada fuera del navegador.
+Los datos públicos que puede usar están en `knowledge/portfolio.json`; actualiza
+ese archivo cuando cambien proyectos, precios o servicios.
+
+1. Revoca cualquier clave expuesta y crea una nueva en Google AI Studio.
+2. En Cloudflare, instala Wrangler, inicia sesión y despliega el Worker:
+   `npx wrangler deploy --config worker/wrangler.toml`.
+3. En el panel de Cloudflare Workers, agrega `GEMINI_API_KEY` como **secreto**.
+   No lo introduzcas en código, `wrangler.toml` ni variables `VITE_`.
+4. Copia la URL pública del Worker (`https://...workers.dev`). En GitHub,
+   Settings → Secrets and variables → Actions → Variables, crea
+   `VITE_CHAT_API_URL` con esa URL; la URL es pública, no la clave.
+5. Ejecuta de nuevo el workflow de GitHub Pages para incluir la URL en el build.
+
+`worker/wrangler.toml` contiene `ALLOWED_ORIGIN`; cambia ese valor si tu sitio
+se sirve desde un dominio propio distinto de `https://doppio-ai.github.io`.
+El Worker usa Gemini 3.5 Flash-Lite y se puede cambiar en `GEMINI_MODEL`.
+
+Para desarrollo local usa `npx wrangler dev --config worker/wrangler.toml`
+con un secreto local `.dev.vars` dentro de `worker/` (ignorado por Git), y
+configura el origen permitido acorde al entorno. `npm run build` verifica
+el frontend, pero no prueba una conversación real con Gemini.
+
+El botón de cotización utiliza `CONTACT.whatsapp` en `src/data/site.js`.
+Mientras siga con el número de ejemplo, enlaza a la sección `#contacto`.
+
+El Worker configura un límite gestionado de 10 solicitudes por minuto por IP (aproximado y por ubicación de Cloudflare; no es un límite global de gasto). Valida hasta 16 KB reales de entrada y usa un timeout de 25 segundos para Gemini.
+
+**Antes de abrirlo al público:** verifica cuotas de Gemini y evalúa protección
+contra bots en el Worker/Cloudflare, alerta/presupuesto de consumo de Gemini y verifica
+la información comercial. La conversación no se guarda en una base de datos;
+el usuario puede compartir voluntariamente su consulta por WhatsApp.
+
+
 MVP del portafolio descrito en `Plan_portafolio_Diego_Reyes.docx`: una sola página
 que presenta servicios, precios orientativos, tres proyectos reales con captura del
 sitio publicado y un contacto claro.

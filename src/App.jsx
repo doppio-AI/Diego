@@ -9,6 +9,7 @@ import { Tecnologias } from "./components/Tecnologias.jsx";
 import { Contacto } from "./components/Contacto.jsx";
 import { Footer } from "./components/Footer.jsx";
 import { BarridoPantalla } from "./components/ui/BarridoPantalla.jsx";
+import { ChatWidget } from "./components/ChatWidget.jsx";
 import { useAnimacionesPagina } from "./hooks/useAnimacionesPagina.js";
 import { refrescarScroll } from "./lib/gsap.js";
 import { interceptarAnclas } from "./lib/navegacion.js";
@@ -67,6 +68,7 @@ export default function App() {
 
       {/* Barrido diagonal de pantalla al navegar */}
       <BarridoPantalla />
+      <ChatWidget />
     </div>
   );
 }
