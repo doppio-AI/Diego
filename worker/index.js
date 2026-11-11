@@ -1,4 +1,5 @@
 import knowledge from "../knowledge/portfolio.json" with { type: "json" };
+export { GeminiQuota } from "./quota.js";
 
 export default {
   async fetch(request, env) {
@@ -65,6 +66,16 @@ export default {
     }));
 
     try {
+      // Reserve before every upstream attempt. Fail closed if durable storage fails.
+      const limiter = env.GEMINI_QUOTA.get(env.GEMINI_QUOTA.idFromName("portfolio-gemini-global-v1"));
+      const quotaResponse = await limiter.fetch("https://quota.internal/reserve", { method: "POST" });
+      if (!quotaResponse.ok) return reply({ error: "Servicio temporalmente no disponible" }, 503);
+      const quota = await quotaResponse.json();
+      if (!quota.allowed) {
+        const response = reply({ error: "Límite de consultas alcanzado", code: quota.code }, 429);
+        response.headers.set("Retry-After", String(quota.retryAfter));
+        return response;
+      }
       const model = env.GEMINI_MODEL || "gemini-3.5-flash-lite";
       const upstream = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
         method: "POST",
@@ -78,6 +89,7 @@ export default {
       });
       if (!upstream.ok) {
         console.error("Gemini upstream error", upstream.status);
+        if (upstream.status === 429) return reply({ error: "Gemini ha alcanzado su cuota disponible", code: "UPSTREAM_QUOTA" }, 429);
         return reply({ error: "Servicio temporalmente no disponible" }, 502);
       }
       const result = await upstream.json();

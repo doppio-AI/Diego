@@ -2,6 +2,24 @@
 
 ## Asistente virtual (MVP)
 
+### Protección de cuota Gemini
+
+El Worker reserva cada intento antes de llamar a Gemini en un único Durable Object
+persistente (`GeminiQuota`). Los límites configurables en `worker/wrangler.toml`
+son 450 intentos por día y 12 en cualquier ventana de 60 segundos, compartidos por
+todos los visitantes. El día se reinicia a medianoche de `America/Los_Angeles`,
+incluyendo horario de verano. Se conservan además los límites por IP.
+
+Los errores upstream también consumen una reserva; no se reintentan automáticamente.
+Solo se almacenan contadores y marcas de tiempo, sin mensajes ni IPs. Si falla el
+control de cuota, no se llama a Gemini. La cotización guiada sigue funcionando sin IA.
+No cambies el nombre `portfolio-gemini-global-v1` del objeto ni elimines su almacenamiento:
+eso reiniciaría el contador. Este control no contabiliza llamadas de otros servicios
+o claves del mismo proyecto Google, ni las realizadas antes de su primera activación.
+Las cuotas del proveedor (incluidos tokens por minuto) siguen aplicando.
+
+Validación: `node --test worker/quota.test.js`.
+
 El widget flotante de `src/components/ChatWidget.jsx` consulta un Cloudflare Worker
 (`worker/index.js`) que llama a Google Gemini. GitHub Pages solo sirve archivos
 estáticos, por lo que el Worker mantiene la clave privada fuera del navegador.

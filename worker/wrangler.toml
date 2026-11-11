@@ -9,6 +9,16 @@ enabled = true
 [vars]
 ALLOWED_ORIGIN = "https://doppio-ai.github.io"
 GEMINI_MODEL = "gemini-3.5-flash-lite"
+GEMINI_DAILY_LIMIT = "450"
+GEMINI_MINUTE_LIMIT = "12"
+
+[[durable_objects.bindings]]
+name = "GEMINI_QUOTA"
+class_name = "GeminiQuota"
+
+[[migrations]]
+tag = "v1-gemini-quota"
+new_sqlite_classes = ["GeminiQuota"]
 
 [[ratelimits]]
 name = "CHAT_RATE_LIMITER"

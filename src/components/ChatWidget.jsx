@@ -48,7 +48,12 @@ export function ChatWidget() {
         body: JSON.stringify({ messages: history })
       });
       if (response.status === 429) {
-        setError("Has enviado varias consultas. Espera un minuto antes de volver a intentar.");
+        const limit = await response.json().catch(() => ({}));
+        setError(limit.code === "DAILY_QUOTA"
+          ? "La IA alcanzó su límite diario. Puedes seguir con la cotización guiada o contactar a Diego por WhatsApp."
+          : limit.code === "UPSTREAM_QUOTA"
+            ? "La IA no tiene cuota disponible por ahora. Puedes usar la cotización guiada o contactar a Diego por WhatsApp."
+            : "Hay varias consultas en curso. Espera un minuto o continúa con la cotización guiada.");
         return;
       }
       if (!response.ok) throw new Error("No disponible");
