@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { PRICES } from "../data/site.js";
+import { CONTACT, PRICES } from "../data/site.js";
 
 const TYPES = ["Landing page", "Sitio web para negocio", "Menú o catálogo digital", "Tienda con pagos en línea", "Sistema personalizado", "Todavía no lo sé"];
 const STEPS = ["¿Qué quieres construir?", "¿Qué quieres lograr con el proyecto?", "¿Qué funciones necesitas?", "¿Cuándo te gustaría tenerlo?", "¿Tienes un presupuesto aproximado?"];
@@ -31,10 +31,10 @@ export function GuidedQuote({ onCancel, contactUrl, externalContact, onContact }
       <h3 ref={headingRef} tabIndex={-1}>{done ? "Tu proyecto, listo para revisar" : STEPS[step]}</h3>
       {done ? <>
         <p className="portfolio-quote-summary">{summary}</p>
-        <p>No se ha enviado ninguna solicitud. Copia este resumen para compartirlo con Diego.</p>
+        <p>No se ha enviado ninguna solicitud. Abre WhatsApp con este resumen y revísalo antes de enviarlo.</p>
         <button type="button" className="portfolio-quote-primary" onClick={copy}>Copiar resumen</button>
         <p role="status">{copyStatus}</p>
-        <a className="portfolio-quote-primary" href={contactUrl} onClick={onContact} {...(externalContact ? { target: "_blank", rel: "noopener noreferrer" } : {})}>Contactar a Diego ↗</a>
+        <a className="portfolio-quote-primary" href={externalContact ? `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(`Hola Diego, preparé esta solicitud desde tu portafolio:\n\n${summary}`)}` : contactUrl} onClick={onContact} {...(externalContact ? { target: "_blank", rel: "noopener noreferrer" } : {})}>{externalContact ? "Enviar resumen por WhatsApp ↗" : "Contactar a Diego ↗"}</a>
         <button type="button" onClick={() => { setCopyStatus(""); setStep(0); }}>Editar respuestas</button>
       </> : <form onSubmit={(event) => { event.preventDefault(); if (answers[key].trim() || step === 4) setStep(step + 1); }}>
         <p>Paso {step + 1} de {STEPS.length}. {step === 4 ? "Puedes dejarlo sin definir." : "No incluyas datos personales ni información sensible."}</p>

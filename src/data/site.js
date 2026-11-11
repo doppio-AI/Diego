@@ -27,8 +27,8 @@ export const PROFILE = {
 export const CONTACT = {
   email: "diego.reyes.reb@gmail.com",
   // Solo dígitos, con lada de país. Ej. México: 5215512345678
-  whatsapp: "5215500000000",
-  whatsappTexto: "5215500000000",
+  whatsapp: "524422312968",
+  whatsappTexto: "+52 442 231 2968",
   linkedin: "https://www.linkedin.com/in/diego-reyes-52645437b/",
   github: "https://github.com/doppio-AI",
   ciudad: "Querétaro, México",
