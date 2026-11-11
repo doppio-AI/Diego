@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { CONTACT } from "../data/site.js";
 import "./ChatWidget.css";
+import { GuidedQuote } from "./GuidedQuote.jsx";
 
 const INTRO = "¡Hola! Soy el asistente virtual de Diego. Puedo contarte sobre sus proyectos, tecnologías y servicios. ¿Qué te gustaría saber?";
 const SUGGESTIONS = ["¿Qué proyectos has realizado?", "¿Qué tecnologías manejas?", "¿Cuánto cuesta una web?"];
@@ -9,6 +10,7 @@ const CHAT_API_URL = import.meta.env.VITE_CHAT_API_URL;
 
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
+  const [quoting, setQuoting] = useState(false);
   const [messages, setMessages] = useState([{ role: "assistant", content: INTRO }]);
   const [draft, setDraft] = useState("");
   const [loading, setLoading] = useState(false);
@@ -75,18 +77,20 @@ export function ChatWidget() {
             <div><span className="portfolio-chat-eyebrow">DIEGO REYES / AI</span><strong>¿Hablamos de tu idea?</strong><small>Asistente virtual · Respuestas con IA</small></div>
             <button type="button" className="portfolio-chat-close" aria-label="Cerrar chat" onClick={close}>×</button>
           </header>
+          {quoting ? <GuidedQuote onCancel={() => setQuoting(false)} contactUrl={whatsappUrl} externalContact={whatsappConfigured} onContact={() => { if (!whatsappConfigured) close(); }} /> : <>
           <div ref={messagesRef} className="portfolio-chat-messages" role="log" aria-live="polite" aria-relevant="additions text">
             {messages.map((message, index) => <div key={index} className={`portfolio-chat-bubble ${message.role}`}>{message.content}</div>)}
             {messages.length === 1 && <div className="portfolio-chat-suggestions">{SUGGESTIONS.map((question) => <button key={question} type="button" onClick={() => send(question)} disabled={loading}>{question}</button>)}</div>}
             {loading && <p className="portfolio-chat-status">Preparando respuesta…</p>}
             {error && <p className="portfolio-chat-error" role="alert">{error}</p>}
           </div>
-          <a className="portfolio-chat-contact" href={whatsappUrl} onClick={() => { if (!whatsappConfigured) close(); }} {...(whatsappConfigured ? { target: "_blank", rel: "noopener noreferrer" } : {})}>Solicitar una cotización ↗</a>
+          <button type="button" className="portfolio-chat-contact" onClick={() => setQuoting(true)} disabled={loading}>Cotizar mi proyecto paso a paso ↗</button>
           <form className="portfolio-chat-compose" onSubmit={(event) => { event.preventDefault(); send(draft); }}>
             <input ref={inputRef} aria-label="Escribe tu pregunta" placeholder="Pregunta lo que necesites…" value={draft} maxLength={1200} onChange={(event) => setDraft(event.target.value)} />
             <button type="submit" disabled={loading || !draft.trim()} aria-label="Enviar mensaje">➤</button>
           </form>
           <p className="portfolio-chat-disclaimer">Tus consultas se procesan con Google Gemini. No compartas datos sensibles. Verifica detalles y cotizaciones con Diego.</p>
+          </>}
         </section>
       )}
       <button ref={launcherRef} className="portfolio-chat-launcher" type="button" onClick={() => setOpen(!open)} aria-label={open ? "Cerrar asistente" : "Abrir asistente virtual"} aria-expanded={open}>
