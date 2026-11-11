@@ -38,6 +38,7 @@ export const NAV_LINKS = [
   { id: "servicios", label: "Servicios" },
   { id: "precios", label: "Precios" },
   { id: "proyectos", label: "Proyectos" },
+  { id: "demos", label: "Demos" },
   { id: "sobre-mi", label: "Sobre mí" },
   { id: "tecnologias", label: "Tecnologías" },
   { id: "contacto", label: "Contacto" },

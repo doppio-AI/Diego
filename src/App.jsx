@@ -10,6 +10,7 @@ import { Contacto } from "./components/Contacto.jsx";
 import { Footer } from "./components/Footer.jsx";
 import { BarridoPantalla } from "./components/ui/BarridoPantalla.jsx";
 import { ChatWidget } from "./components/ChatWidget.jsx";
+import { DemoLab } from "./components/DemoLab.jsx";
 import { useAnimacionesPagina } from "./hooks/useAnimacionesPagina.js";
 import { refrescarScroll } from "./lib/gsap.js";
 import { interceptarAnclas } from "./lib/navegacion.js";
@@ -27,6 +28,7 @@ import { useTema } from "./lib/tema.js";
 export default function App() {
   const tema = useTema();
   const raiz = useRef(null);
+  const chat = useRef(null);
 
   /* Depende del tema: al remontarse el árbol hay que volver a crear los
      disparos, porque los anteriores apuntan a nodos que ya no existen. */
@@ -59,6 +61,7 @@ export default function App() {
         <Servicios />
         <Precios />
         <Proyectos />
+        <DemoLab onQuote={() => chat.current?.startQuote({ type: "Menú o catálogo digital", features: "Búsqueda, filtros y lista de productos para cotizar por WhatsApp." })} />
         <SobreMi />
         <Tecnologias />
         <Contacto />
@@ -68,7 +71,7 @@ export default function App() {
 
       {/* Barrido diagonal de pantalla al navegar */}
       <BarridoPantalla />
-      <ChatWidget />
+      <ChatWidget ref={chat} />
     </div>
   );
 }

@@ -6,9 +6,9 @@ const STEPS = ["¿Qué quieres construir?", "¿Qué quieres lograr con el proyec
 const KEYS = ["type", "goal", "features", "date", "budget"];
 const OPTIONS = [TYPES, [], ["Información y contacto", "Catálogo y consultas por WhatsApp", "Pagos, usuarios o integraciones", "Necesito orientación"], ["Sin fecha definida", "En el próximo mes", "En 2–3 meses"], ["Prefiero definirlo con Diego"]];
 
-export function GuidedQuote({ onCancel, contactUrl, externalContact, onContact }) {
+export function GuidedQuote({ onCancel, contactUrl, externalContact, onContact, initialAnswers }) {
   const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState({ type: "", goal: "", features: "", date: "", budget: "" });
+  const [answers, setAnswers] = useState(() => ({ type: "", goal: "", features: "", date: "", budget: "", ...initialAnswers }));
   const [copyStatus, setCopyStatus] = useState("");
   const headingRef = useRef(null);
   const key = KEYS[step];
