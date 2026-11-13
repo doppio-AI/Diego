@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SectionHeading } from "./ui/SectionHeading.jsx";
 import "./DemoLab.css";
+import { AppointmentDemo } from "./AppointmentDemo.jsx";
+import { refrescarScroll } from "../lib/gsap.js";
 
 const PRODUCTS = [
   { id: "lamp", name: "Lámpara Arco", category: "Escritorio", price: 890, color: "#d9a66c", kind: "lamp", detail: "Luz cálida para tu espacio de trabajo." },
@@ -25,7 +27,7 @@ function ProductArt({ product }) {
   </svg>;
 }
 
-export function DemoLab({ onQuote }) {
+function CatalogDemo({ onQuote }) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("Todos");
   const [sort, setSort] = useState("featured");
@@ -39,9 +41,7 @@ export function DemoLab({ onQuote }) {
     setCart((previous) => ({ ...previous, [product.id]: Math.max(0, Math.min(20, (previous[product.id] || 0) + delta)) }));
     setNotice(delta > 0 ? `${product.name} añadido a tu lista de ejemplo.` : `Cantidad de ${product.name} actualizada.`);
   }
-  return <section id="demos" aria-labelledby="demos-title" className="demo-lab scroll-mt-24 py-16 sm:py-20">
-    <div className="container-page">
-      <SectionHeading id="demos-title" eyebrow="Laboratorio de demos" title="No solo lo veas. Pruébalo." description="Explora una solución que podríamos adaptar a tu negocio. Busca productos, arma una lista y descubre cómo sería la experiencia de tus clientes." />
+  return (
       <div className="demo-window">
         <header className="demo-window-bar"><span><i /><i /><i /></span><span>ESTUDIO / CATÁLOGO</span><span className="demo-badge">DEMO INTERACTIVA</span></header>
         <div className="demo-shop-intro"><div><p className="demo-eyebrow">OBJETOS PARA CREAR</p><h3>Pequeños detalles.<br />Grandes ideas.</h3><p>Una tienda de escritorio imaginaria, una experiencia que puedes probar.</p></div><div className="demo-intro-note"><strong>01 / Catálogo digital</strong><span>Útil para tiendas, distribuidores y negocios que cotizan por WhatsApp.</span></div></div>
@@ -55,6 +55,23 @@ export function DemoLab({ onQuote }) {
         <p className="sr-only" role="status">{notice}</p>
         <footer className="demo-foot"><span>BUSCAR · FILTRAR · SELECCIONAR · COTIZAR</span><span>Tu marca, tu catálogo, tus clientes.</span></footer>
       </div>
-    </div>
-  </section>;
+  );
+}
+
+const DEMOS = [{ id: "catalog", label: "01 / Catálogo digital" }, { id: "appointments", label: "02 / Agenda de citas" }];
+export function DemoLab({ onQuote }) {
+  const [active, setActive] = useState("catalog");
+  const tabs = useRef([]);
+  useEffect(() => { refrescarScroll(); }, [active]);
+  function navigate(event, index) {
+    const next = ["ArrowRight", "ArrowLeft"].includes(event.key) ? (index + 1) % 2 : event.key === "Home" ? 0 : event.key === "End" ? 1 : null;
+    if (next === null) return;
+    event.preventDefault(); setActive(DEMOS[next].id); tabs.current[next]?.focus();
+  }
+  return <section id="demos" aria-labelledby="demos-title" className="demo-lab scroll-mt-24 py-16 sm:py-20"><div className="container-page">
+    <SectionHeading id="demos-title" eyebrow="Laboratorio de demos" title="No solo lo veas. Pruébalo." description="Explora soluciones que podríamos adaptar a tu negocio. Arma una lista de productos o prueba una agenda y descubre la experiencia de tus clientes." />
+    <div className="demo-tabs" role="tablist" aria-label="Demos disponibles">{DEMOS.map((demo,index) => <button key={demo.id} ref={el => { tabs.current[index] = el; }} type="button" role="tab" id={"tab-"+demo.id} aria-controls={"panel-"+demo.id} aria-selected={active === demo.id} tabIndex={active === demo.id ? 0 : -1} onKeyDown={event => navigate(event,index)} onClick={() => setActive(demo.id)}>{demo.label}</button>)}</div>
+    <div role="tabpanel" id="panel-catalog" aria-labelledby="tab-catalog" hidden={active !== "catalog"}><CatalogDemo onQuote={() => onQuote({type:"Menú o catálogo digital",features:"Búsqueda, filtros y lista de productos para cotizar por WhatsApp."})} /></div>
+    <div role="tabpanel" id="panel-appointments" aria-labelledby="tab-appointments" hidden={active !== "appointments"}><AppointmentDemo onQuote={() => onQuote({type:"Sistema personalizado",features:"Agenda de citas con selección de servicios, fechas, horarios y resumen de solicitud."})} /></div>
+  </div></section>;
 }

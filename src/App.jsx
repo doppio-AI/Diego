@@ -61,7 +61,7 @@ export default function App() {
         <Servicios />
         <Precios />
         <Proyectos />
-        <DemoLab onQuote={() => chat.current?.startQuote({ type: "Menú o catálogo digital", features: "Búsqueda, filtros y lista de productos para cotizar por WhatsApp." })} />
+        <DemoLab onQuote={answers => chat.current?.startQuote(answers)} />
         <SobreMi />
         <Tecnologias />
         <Contacto />
